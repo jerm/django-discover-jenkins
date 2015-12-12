@@ -75,6 +75,15 @@ Settings
 
     TEST_PYLINT_RCFILE = 'pylint.rc'
 
+* ``--pylint-processes``
+
+  Set number of concurrent processes PyLint will use. Set to 0 to use 1
+  process per core/cpu
+
+  Default vaue::
+
+    --pylint-processes=1
+
 JSHintTask
 ==========
 
