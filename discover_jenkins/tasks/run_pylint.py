@@ -44,6 +44,7 @@ class PyLintTask(object):
     def __init__(self, **options):
         self.config_path = options['pylint_rcfile'] or default_config_path()
         self.errors_only = options['pylint_errors_only']
+        self.num_processes = options['pylint_processes']
 
         if options.get('pylint_file_output', True):
             output_dir = options['output_dir']
@@ -61,12 +62,16 @@ class PyLintTask(object):
         parser.add_argument("--pylint-errors-only",
             dest="pylint_errors_only", action="store_true", default=False,
             help="pylint output errors only mode")
+        parser.add_argument("--pylint-processes",
+            dest="pylint_processes", default=1,
+            help="Number of concurrent pylint processes to use. 0 = all CPU's. Default 1")
 
     def teardown_test_environment(self, **kwargs):
         if PROJECT_APPS:
             args = ["--rcfile=%s" % self.config_path]
             if self.errors_only:
                 args += ['--errors-only']
+            args += ['-j %d' % int(self.num_processes)]
             args += PROJECT_APPS
 
             lint.Run(
